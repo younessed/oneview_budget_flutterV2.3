@@ -4,11 +4,19 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
-
     plugins {
-        id "dev.flutter.flutter-plugin-loader" // 🔥 pas de version ici
-        id "com.android.application" version "8.5.2" apply false
-        id "org.jetbrains.kotlin.android" version "1.9.24" apply false
+        id "dev.flutter.flutter-plugin-loader"        // << pas de version
+        id "com.android.application" version "8.5.2"  // versions déclarées ici
+        id "org.jetbrains.kotlin.android" version "1.9.24"
+    }
+}
+
+// (optionnel mais conseillé avec Gradle 8)
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
     }
 }
 
