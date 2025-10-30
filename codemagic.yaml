@@ -11,17 +11,20 @@ workflows:
         script: |
           flutter --version
           dart --version
-          ./android/gradlew -v || true
 
-      - name: Nettoyage et dépendances
+      - name: Nettoyage & dépendances
         script: |
           flutter clean
           flutter pub get
+          # 👉 Donner les droits d'exécution au wrapper Gradle
+          chmod +x android/gradlew
+          # Nettoyage Gradle (optionnel mais propre)
           ./android/gradlew -p android clean
 
       - name: Construction APK (via Gradle)
         script: |
           set -euxo pipefail
+          chmod +x android/gradlew
           ./android/gradlew -p android :app:assembleRelease
           echo "== APKs trouvés =="
           find android/app/build/outputs/apk -type f -name "*.apk" -print
