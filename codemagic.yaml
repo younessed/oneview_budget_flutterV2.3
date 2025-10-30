@@ -5,6 +5,11 @@ workflows:
     environment:
       flutter: stable
     scripts:
+      - name: Nettoyage complet du cache
+        script: |
+          flutter clean
+          rm -rf ~/.pub-cache
+          rm -rf build
       - name: Vérifier Flutter
         script: flutter --version
       - name: Nettoyage
