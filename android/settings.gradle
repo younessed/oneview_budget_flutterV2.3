@@ -1,21 +1,23 @@
-import java.util.Properties
-
-// Charger flutter.sdk depuis local.properties
-def localProps = new Properties()
-def localPropsFile = new File(rootDir, "local.properties")
-if (localPropsFile.exists()) {
-  localPropsFile.withReader("UTF-8") { localProps.load(it) }
-}
-def flutterSdkPath = localProps.getProperty("flutter.sdk")
-assert flutterSdkPath != null : "flutter.sdk manquant dans local.properties"
-
+// ⚠️ CE BLOC DOIT ÊTRE EN PREMIER !
 pluginManagement {
+  // Lire flutter.sdk depuis local.properties, mais À L’INTÉRIEUR de pluginManagement
+  def props = new Properties()
+  def f = new File(rootDir, "local.properties")
+  if (f.exists()) {
+    f.withReader("UTF-8") { props.load(it) }
+  }
+  def flutterSdkPath = props.getProperty("flutter.sdk")
+  if (flutterSdkPath == null) {
+    throw new GradleException("flutter.sdk manquant dans local.properties")
+  }
+
   repositories {
     google()
     mavenCentral()
     gradlePluginPortal()
   }
-  // IMPORTANT: utiliser le chemin ABSOLU du SDK Flutter, pas un chemin relatif
+
+  // Important : chemin ABSOLU du SDK Flutter
   includeBuild("${flutterSdkPath}/packages/flutter_tools/gradle")
 }
 
