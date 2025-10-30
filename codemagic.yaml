@@ -1,46 +1,28 @@
 workflows:
-  oneview_android_release:
+  android-apk:
     name: OneView Budget APK
     max_build_duration: 60
     environment:
-      flutter: 3.22.2
+      flutter: stable
     scripts:
-      - name: Versions
+      - name: Vérifier la structure du projet
         script: |
-          flutter --version
-          dart --version
+          echo "== Vérification des fichiers essentiels =="
+          ls -la
+          if [ ! -f "pubspec.yaml" ]; then echo "❌ Fichier pubspec.yaml introuvable"; exit 1; fi
+          if [ ! -f "lib/main.dart" ]; then echo "❌ Fichier lib/main.dart introuvable"; exit 1; fi
 
-      - name: Pub get
+      - name: Version Flutter
+        script: flutter --version
+
+      - name: Installer les dépendances
         script: flutter pub get
 
-      - name: Build APK (universal + split)
+      - name: Build APK Release
         script: |
-          set -e
-          # 1) build universel
           flutter build apk --release
-          # 2) build split (ABI)
-          flutter build apk --release --split-per-abi || true
-
-          echo "== ARBRE DU DOSSIER build (top 500) =="
-          find build -maxdepth 6 -type f | head -n 500 || true
-
-          echo "== COPIE DES APKs =="
-          mkdir -p cm_artifacts
-          # chemins classiques Flutter récents
-          cp -v build/app/outputs/flutter-apk/*.apk cm_artifacts/ 2>/dev/null || true
-          # anciens chemins Gradle
-          cp -v android/app/build/outputs/apk/release/*.apk cm_artifacts/ 2>/dev/null || true
-          # filet de sécurité (attrape TOUT .apk sous build/)
-          find build -type f -name "*.apk" -print -exec cp -v {} cm_artifacts/ \; || true
-
-          echo "== CONTENU cm_artifacts =="
-          ls -la cm_artifacts || true
-
-          # échouer si rien trouvé (pour qu’on voie clair)
-          if [ -z "$(ls -A cm_artifacts 2>/dev/null)" ]; then
-            echo "AUCUN APK TROUVÉ. Vérifie les logs ci-dessus (chemins)."
-            exit 2
-          fi
+          echo "== Liste des APKs générés =="
+          find build/app/outputs -type f -name "*.apk" || echo "Aucun APK trouvé !"
 
     artifacts:
-      - cm_artifacts/*.apk
+      - build/app/outputs/flutter-apk/*.apk
