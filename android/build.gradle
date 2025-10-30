@@ -1,12 +1,10 @@
-// android/build.gradle (racine Android)
-
-rootProject.buildDir = "../build"
-
-subprojects {
-    project.buildDir = "${rootProject.buildDir}/${project.name}"
-    project.evaluationDependsOn(":app")
+allprojects {
+  repositories {
+    google()
+    mavenCentral()
+  }
 }
 
 tasks.register("clean", Delete) {
-    delete rootProject.buildDir
+  delete rootProject.buildDir
 }
