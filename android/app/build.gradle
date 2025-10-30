@@ -1,42 +1,30 @@
 plugins {
-    id "com.android.application"
-    id "org.jetbrains.kotlin.android"
-    id "dev.flutter.flutter-gradle-plugin"
+  id "com.android.application"
+  id "org.jetbrains.kotlin.android"
+  id "dev.flutter.flutter-gradle-plugin"
 }
 
 android {
-    namespace "com.oneview.budget"
-    compileSdk 36          // ✅ mis à jour depuis 34 → 36
-
-    defaultConfig {
-        applicationId "com.oneview.budget"
-        minSdk 21
-        targetSdk 36       // ✅ mis à jour aussi
-        versionCode 1
-        versionName "1.0.0"
+  namespace "com.oneview.budget"
+  compileSdk 36        // ← monte à 36 (path_provider l’exige)
+  defaultConfig {
+    applicationId "com.oneview.budget"
+    minSdk 21
+    targetSdk 36
+    versionCode 1
+    versionName "1.0.0"
+  }
+  buildTypes {
+    release {
+      signingConfig signingConfigs.debug
     }
-
-    buildTypes {
-        release {
-            // Tu pourras plus tard remplacer cette ligne par ta vraie signature
-            signingConfig signingConfigs.debug
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
+  }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+  kotlinOptions { jvmTarget = "1.8" }
 }
 
-flutter {
-    source "../.."
-}
-
-dependencies {
-    // Rien à ajouter ici pour Flutter
-}
+// pas besoin de bloc flutter { source "../.." } avec le nouveau plugin
+dependencies { }
