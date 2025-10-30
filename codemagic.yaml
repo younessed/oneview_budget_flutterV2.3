@@ -1,28 +1,32 @@
 workflows:
   android-apk:
-    name: OneView Budget APK
+    name: OneView Budget APK (force artifact)
     max_build_duration: 60
     environment:
       flutter: stable
     scripts:
-      - name: Vérifier la structure du projet
+      - name: Vérification du projet
         script: |
-          echo "== Vérification des fichiers essentiels =="
+          echo "== Contenu racine =="
           ls -la
-          if [ ! -f "pubspec.yaml" ]; then echo "❌ Fichier pubspec.yaml introuvable"; exit 1; fi
-          if [ ! -f "lib/main.dart" ]; then echo "❌ Fichier lib/main.dart introuvable"; exit 1; fi
+          if [ ! -f "pubspec.yaml" ]; then echo "❌ pubspec.yaml manquant"; exit 1; fi
+          if [ ! -f "lib/main.dart" ]; then echo "❌ lib/main.dart manquant"; exit 1; fi
 
       - name: Version Flutter
         script: flutter --version
 
-      - name: Installer les dépendances
+      - name: Dépendances
         script: flutter pub get
 
-      - name: Build APK Release
+      - name: Build APK (universel)
         script: |
-          flutter build apk --release
-          echo "== Liste des APKs générés =="
-          find build/app/outputs -type f -name "*.apk" || echo "Aucun APK trouvé !"
+          echo "== Build APK =="
+          flutter build apk --release || { echo "❌ Build échouée"; exit 1; }
+          echo "== Recherche d'APKs =="
+          mkdir -p cm_artifacts
+          find . -type f -name "*.apk" -print -exec cp -v {} cm_artifacts/ \; || true
+          echo "== Contenu du dossier cm_artifacts =="
+          ls -la cm_artifacts || echo "⚠️ Aucun APK trouvé"
 
     artifacts:
-      - build/app/outputs/flutter-apk/*.apk
+      - cm_artifacts/*.apk
