@@ -4,8 +4,8 @@ workflows:
     max_build_duration: 60
 
     environment:
-      flutter: 3.22.2        # version fixe de Flutter
-      java: 17               # JDK compatible Gradle/AGP récents
+      flutter: 3.22.2
+      java: 17
 
     scripts:
       - name: Versions & préparation
@@ -21,20 +21,26 @@ workflows:
       - name: Dépendances
         script: flutter pub get
 
-      - name: Sanity checks
+      - name: Vérification
         script: |
           test -f lib/main.dart
           test -f android/app/src/main/AndroidManifest.xml
 
-      - name: Build APKs (split + universel)
+      - name: Build APK universel
         script: |
-          # APKs par ABI (armeabi-v7a, arm64, x86_64)
-          flutter build apk --release --split-per-abi
-          # APK universel (facile à installer pour tester vite)
           flutter build apk --release
-          echo "== Dossier APK Flutter =="
-          ls -la build/app/outputs/flutter-apk || true
+          echo "== Liste des fichiers générés =="
+          find build/app/outputs -type f -name "*.apk" || true
 
+      - name: Collecte des artefacts
+        script: |
+          mkdir -p cm_artifacts
+          cp -v build/app/outputs/**/*.apk cm_artifacts/ || echo "⚠️ Aucun APK trouvé"
+          echo "== Contenu de cm_artifacts =="
+          ls -la cm_artifacts || true
+
+    artifacts:
+      - cm_artifacts/*.apk
       - name: Collecte des artefacts
         script: |
           set -eux
