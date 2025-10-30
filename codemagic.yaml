@@ -7,23 +7,33 @@ workflows:
       java: 17
 
     scripts:
-      - name: Versions
+      - name: Vérifier les versions
         script: |
           flutter --version
           dart --version
+          ./android/gradlew -v || true
 
-      - name: Clean & deps
+      - name: Nettoyage et dépendances
         script: |
           flutter clean
           flutter pub get
+          ./android/gradlew -p android clean
 
-      - name: Build APK (universel)
+      - name: Construction APK (via Gradle)
         script: |
-          set -e
-          flutter build apk --release -v
+          set -euxo pipefail
+          ./android/gradlew -p android :app:assembleRelease
           echo "== APKs trouvés =="
-          find build -type f -name "*.apk" -print || true
+          find android/app/build/outputs/apk -type f -name "*.apk" -print
+
+      - name: Collecte des artefacts
+        script: |
+          mkdir -p cm_artifacts
+          cp -v android/app/build/outputs/apk/release/*.apk cm_artifacts/ || true
+          cp -v android/app/build/outputs/apk/**/*.apk cm_artifacts/ || true
+          echo "== Contenu cm_artifacts =="
+          ls -la cm_artifacts || true
 
     artifacts:
-      - build/**/outputs/**/*.apk
-      - build/**/*.apk
+      - cm_artifacts/*.apk
+      - android/app/build/outputs/apk/**/*.apk
