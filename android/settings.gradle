@@ -1,17 +1,28 @@
-// Charge flutter_tools pour le nouveau système de plugins
+import java.util.Properties
+
+// Charger flutter.sdk depuis local.properties
+def localProps = new Properties()
+def localPropsFile = new File(rootDir, "local.properties")
+if (localPropsFile.exists()) {
+  localPropsFile.withReader("UTF-8") { localProps.load(it) }
+}
+def flutterSdkPath = localProps.getProperty("flutter.sdk")
+assert flutterSdkPath != null : "flutter.sdk manquant dans local.properties"
+
 pluginManagement {
   repositories {
     google()
     mavenCentral()
     gradlePluginPortal()
   }
-  includeBuild("../packages/flutter_tools/gradle") // Flutter l’interprète correctement
+  // IMPORTANT: utiliser le chemin ABSOLU du SDK Flutter, pas un chemin relatif
+  includeBuild("${flutterSdkPath}/packages/flutter_tools/gradle")
 }
 
 plugins {
   id "dev.flutter.flutter-plugin-loader" version "1.0.0"
-  id "com.android.application" version "8.6.1" apply false   // ✅ AGP >= 8.6
-  id "org.jetbrains.kotlin.android" version "2.1.0" apply false  // ✅ Kotlin >= 2.1
+  id "com.android.application" version "8.6.1" apply false
+  id "org.jetbrains.kotlin.android" version "2.1.0" apply false
 }
 
 include(":app")
