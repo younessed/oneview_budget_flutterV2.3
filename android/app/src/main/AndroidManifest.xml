@@ -1,5 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.oneview2">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
    <application
         android:label="oneview2"
         android:name="${applicationName}"
@@ -32,3 +31,4 @@
             android:value="2" />
     </application>
 </manifest>
+
