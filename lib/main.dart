@@ -553,7 +553,7 @@ class _BottomNav extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: const [
           Icon(Icons.home_rounded, color: Colors.white, size: 26),
-          Icon(Icons.time_auto_rounded, color: Colors.white70, size: 24),
+          Icon(Icons.access_time_filled, color: Colors.white70, size: 24),
           Icon(Icons.auto_graph_rounded, color: Colors.white70, size: 24),
           Icon(Icons.person_rounded, color: Colors.white70, size: 24),
           Icon(Icons.settings_rounded, color: Colors.white70, size: 24),
