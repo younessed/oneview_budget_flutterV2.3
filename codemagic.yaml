@@ -2,7 +2,6 @@ workflows:
   oneview_android_release:
     name: OneView Android APK
     max_build_duration: 60
-
     environment:
       flutter: 3.22.2
       java: 17
@@ -21,33 +20,19 @@ workflows:
       - name: Dépendances
         script: flutter pub get
 
-      - name: Vérification
-        script: |
-          test -f lib/main.dart
-          test -f android/app/src/main/AndroidManifest.xml
-
-      - name: Build APK universel
+      - name: Build APK (universel)
         script: |
           flutter build apk --release
-          echo "== Liste des fichiers générés =="
-          find build/app/outputs -type f -name "*.apk" || true
+          echo "== APKs trouvés =="
+          find build/app/outputs -type f -name "*.apk" -print
 
       - name: Collecte des artefacts
         script: |
-          mkdir -p cm_artifacts
-          cp -v build/app/outputs/**/*.apk cm_artifacts/ || echo "⚠️ Aucun APK trouvé"
-          echo "== Contenu de cm_artifacts =="
-          ls -la cm_artifacts || true
+          mkdir -p "$CM_EXPORT_DIR"
+          # copie tous les APKs générés (quel que soit le sous-dossier)
+          find build/app/outputs -type f -name "*.apk" -exec cp -v {} "$CM_EXPORT_DIR"/ \;
+          echo "== Contenu $CM_EXPORT_DIR =="
+          ls -la "$CM_EXPORT_DIR"
 
     artifacts:
-      - cm_artifacts/*.apk
-      - name: Collecte des artefacts
-        script: |
-          set -eux
-          mkdir -p cm_artifacts
-          cp -v build/app/outputs/flutter-apk/*.apk cm_artifacts/
-          echo "== Artefacts à publier =="
-          ls -la cm_artifacts
-
-    artifacts:
-      - cm_artifacts/*.apk
+      - $CM_EXPORT_DIR/*.apk
