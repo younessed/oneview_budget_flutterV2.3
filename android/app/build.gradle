@@ -1,24 +1,24 @@
 plugins {
-  id "com.android.application"
-  id "org.jetbrains.kotlin.android"
-  id "dev.flutter.flutter-gradle-plugin"
+    id "com.android.application"
+    id "org.jetbrains.kotlin.android"
+    id "dev.flutter.flutter-gradle-plugin"
 }
 
 android {
     namespace "com.oneview.budget"
-    compileSdk 34
+    compileSdk 36          // ✅ mis à jour depuis 34 → 36
 
     defaultConfig {
         applicationId "com.oneview.budget"
         minSdk 21
-        targetSdk 34
+        targetSdk 36       // ✅ mis à jour aussi
         versionCode 1
         versionName "1.0.0"
     }
 
     buildTypes {
         release {
-            // à remplacer par ta vraie signature plus tard
+            // Tu pourras plus tard remplacer cette ligne par ta vraie signature
             signingConfig signingConfigs.debug
         }
     }
@@ -27,7 +27,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    kotlinOptions { jvmTarget = "1.8" }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 flutter {
@@ -35,5 +38,5 @@ flutter {
 }
 
 dependencies {
-    // rien à ajouter ici
+    // Rien à ajouter ici pour Flutter
 }
