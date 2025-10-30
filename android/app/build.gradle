@@ -1,7 +1,7 @@
 plugins {
-    id "com.android.application"
-    id "org.jetbrains.kotlin.android"
-    id "dev.flutter.flutter-gradle-plugin"   // fourni par le loader ci-dessus
+  id "com.android.application"
+  id "org.jetbrains.kotlin.android"
+  id "dev.flutter.flutter-gradle-plugin"
 }
 
 android {
@@ -37,3 +37,4 @@ flutter {
 dependencies {
     // rien d’autre n’est requis ici pour Flutter
 }
+
