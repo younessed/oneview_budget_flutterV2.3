@@ -5,37 +5,32 @@ plugins {
 }
 
 android {
-    namespace "com.oneview.budget"           // <— choisis ton namespace
-    compileSdk 34
+  namespace "com.oneview.budget"
+  compileSdk 34
 
-    defaultConfig {
-        applicationId "com.oneview.budget"   // <— ton ID d’app
-        minSdk 21
-        targetSdk 34
-        versionCode 1
-        versionName "1.0.0"
-    }
+  defaultConfig {
+    applicationId "com.oneview.budget"
+    minSdk 21
+    targetSdk 34
+    versionCode 1
+    versionName "1.0.0"
+  }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions { jvmTarget = "1.8" }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+  kotlinOptions { jvmTarget = "1.8" }
 
-    buildTypes {
-        release {
-            // à remplacer par ta signature quand prête
-            signingConfig signingConfigs.debug
-        }
+  buildTypes {
+    release {
+      // remplace par ta vraie signature plus tard
+      signingConfig signingConfigs.debug
     }
+  }
 }
 
-flutter {
-    source "../.."
-}
-
-dependencies {
-    // rien d’autre n’est requis ici pour Flutter
-}
-
-
+/* ❌ NE PAS remettre:
+flutter { source "../.." }
+dependencies { ... }
+*/
