@@ -4,31 +4,44 @@ workflows:
     max_build_duration: 60
 
     environment:
-      flutter: 3.22.2   # une seule version, claire et fixe
+      flutter: 3.22.2        # version fixe de Flutter
+      java: 17               # JDK compatible Gradle/AGP récents
 
     scripts:
-      - name: Versions
+      - name: Versions & préparation
         script: |
+          set -euxo pipefail
           flutter --version
-          dart --version
+          java -version
+          chmod +x android/gradlew
 
-      - name: Nettoyage léger
+      - name: Nettoyage
         script: flutter clean
 
       - name: Dépendances
         script: flutter pub get
 
-      - name: Sanity check (main.dart présent)
+      - name: Sanity checks
         script: |
-          if [ ! -f lib/main.dart ]; then
-            echo "ERREUR: lib/main.dart introuvable"; exit 1;
-          fi
+          test -f lib/main.dart
+          test -f android/app/src/main/AndroidManifest.xml
 
-      - name: Build APK (split par ABI)
+      - name: Build APKs (split + universel)
         script: |
+          # APKs par ABI (armeabi-v7a, arm64, x86_64)
           flutter build apk --release --split-per-abi
-          echo "== Contenu du dossier d'APKs =="
+          # APK universel (facile à installer pour tester vite)
+          flutter build apk --release
+          echo "== Dossier APK Flutter =="
           ls -la build/app/outputs/flutter-apk || true
 
+      - name: Collecte des artefacts
+        script: |
+          set -eux
+          mkdir -p cm_artifacts
+          cp -v build/app/outputs/flutter-apk/*.apk cm_artifacts/
+          echo "== Artefacts à publier =="
+          ls -la cm_artifacts
+
     artifacts:
-      - build/app/outputs/flutter-apk/*.apk
+      - cm_artifacts/*.apk
