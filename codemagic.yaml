@@ -45,17 +45,4 @@ workflows:
           find build -type f -name "*.apk" -print -exec cp -v {} cm_artifacts/ \; || true
           ls -la cm_artifacts || true
     artifacts:
-      - cm_artifacts/*.apk      - name: Sanity check
-        script: |
-          [ -f pubspec.yaml ] || { echo "pubspec.yaml introuvable"; exit 1; }
-          [ -f lib/main.dart ] || { echo "lib/main.dart introuvable"; exit 1; }
-      - name: Dépendances
-        script: flutter pub get
-      - name: Build APK (split ABI)
-        script: |
-          flutter build apk --release --split-per-abi
-          echo "== APKs trouvés =="
-          find build -type f -name "*.apk" -print || true
-    artifacts:
-      - build/**/outputs/**/*.apk
-      - build/**/*.apk
+      - cm_artifacts/*.apk
