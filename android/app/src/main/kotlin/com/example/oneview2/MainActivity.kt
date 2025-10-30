@@ -1,4 +1,4 @@
-package com.example.oneview2
+package com.oneview.budget
 
 import io.flutter.embedding.android.FlutterActivity
 
