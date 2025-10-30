@@ -1,56 +1,39 @@
 plugins {
     id "com.android.application"
     id "org.jetbrains.kotlin.android"
-    id "dev.flutter.flutter-gradle-plugin"
+    id "dev.flutter.flutter-gradle-plugin"   // fourni par le loader ci-dessus
 }
-
-def localProperties = new Properties()
-def localPropertiesFile = rootProject.file('local.properties')
-if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { reader ->
-        localProperties.load(reader)
-    }
-}
-
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode') ?: '1'
-def flutterVersionName = localProperties.getProperty('flutter.versionName') ?: '1.0'
 
 android {
-    // Tu peux adapter l'ID si besoin
-    namespace "com.oneview.budget"
-    compileSdkVersion flutter.compileSdkVersion
+    namespace "com.oneview.budget"           // <— choisis ton namespace
+    compileSdk 34
 
     defaultConfig {
-        applicationId "com.oneview.budget"
-        minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        applicationId "com.oneview.budget"   // <— ton ID d’app
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName "1.0.0"
     }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    kotlinOptions { jvmTarget = '1.8' }
+    kotlinOptions { jvmTarget = "1.8" }
 
     buildTypes {
         release {
-            // garde debug pour signer vite, on mettra une signature release plus tard
+            // à remplacer par ta signature quand prête
             signingConfig signingConfigs.debug
-            minifyEnabled false
-            shrinkResources false
         }
-    }
-
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
     }
 }
 
 flutter {
-    source '../..'
+    source "../.."
 }
 
-// La stdlib Kotlin est apportée par le plugin, pas besoin de dépendances manuelles ici
-dependencies { }
+dependencies {
+    // rien d’autre n’est requis ici pour Flutter
+}
