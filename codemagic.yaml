@@ -7,14 +7,6 @@ workflows:
       java: 17
 
     scripts:
-      - name: Sanity check
-        script: |
-          set -e
-          echo "== Arbo repo =="
-          ls -la
-          test -f pubspec.yaml
-          test -f lib/main.dart
-
       - name: Versions
         script: |
           flutter --version
@@ -29,8 +21,6 @@ workflows:
         script: |
           set -e
           flutter build apk --release -v
-          echo "== Fichiers trouvés sous build/ =="
-          find build -maxdepth 5 -type f -print || true
           echo "== APKs trouvés =="
           find build -type f -name "*.apk" -print || true
 
