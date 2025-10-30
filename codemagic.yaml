@@ -1,14 +1,22 @@
 workflows:
-  android-apk:
-    name: OneView Budget APK
+  oneview_android_release:
+    name: OneView Android APK
     max_build_duration: 60
-    instance_type: mac_mini_m2
     environment:
       flutter: stable
     scripts:
-      - flutter --version
-      - flutter create .
-      - flutter pub get
-      - flutter build apk --release
+      - name: Vérifier Flutter
+        script: flutter --version
+      - name: Nettoyage
+        script: flutter clean
+      - name: Dépendances
+        script: flutter pub get
+      - name: Sanity check (main.dart présent)
+        script: |
+          if [ ! -f lib/main.dart ]; then
+            echo "ERREUR: lib/main.dart introuvable"; exit 1;
+          fi
+      - name: Build APK (split par ABI)
+        script: flutter build apk --release --split-per-abi
     artifacts:
-      - build/app/outputs/flutter-apk/*.apk
+      - build/app/outputs/flutter-apk/app-*-release.apk
